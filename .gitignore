@@ -1,0 +1,64 @@
+﻿# OS / editor
+desktop.ini
+Thumbs.db
+.DS_Store
+.idea/
+.vscode/
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local media artifacts
+*.mp4
+*.mkv
+*.mov
+*.avi
+*.webm
+*.m4v
+*.ts
+*.mts
+*.m2ts
+*.flv
+*.wmv
+*.mpeg
+*.mpg
+*.3gp
+*.ogv
+*.wav
+*.mp3
+*.m4a
+*.aac
+*.flac
+*.ogg
+
+# Portable/runtime-heavy bundles (do not push to GitHub source repo)
+app/python/
+app/bin/ffmpeg/
+wheels/
+
+# Runtime outputs and cache
+app/logs/
+app/data/videos/
+app/data/audios/
+app/data/outputs/
+app/data/temp/
+app/data/cef_cache/
+app/data/jobs/
+
+# Local runtime state json
+app/data/video_index.json
+app/data/face_selections.json
+app/data/timelines.json
+app/data/face_tracks.json
+app/data/runtime_settings.json
+
+# Model weights and generated artifacts
+Wav2Lip/checkpoints/
+Wav2Lip/results/
+Wav2Lip/temp/
+
+# Safety: nested git metadata in vendored repo copy
+Wav2Lip/.git/

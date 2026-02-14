@@ -1,0 +1,288 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LipFlow</title>
+  <link rel="stylesheet" href="/styles.css?v=20260214_04">
+</head>
+<body>
+  <div class="app-shell">
+    <header id="windowDragBar" class="window-bar">
+      <div class="title-wrap">
+        <strong>LipFlow</strong>
+      </div>
+      <div class="window-actions">
+        <label class="lang-control">
+          <select id="langSelect" class="lang-select">
+            <option value="en">EN</option>
+            <option value="ru">RU</option>
+          </select>
+        </label>
+        <button id="minBtn" class="icon-btn" data-i18n-title="window.min" title="Minimize">
+          <img class="window-icon" src="/assets/icons/minimize.svg" alt="">
+        </button>
+        <button id="maxBtn" class="icon-btn" data-i18n-title="window.max" title="Maximize">
+          <img class="window-icon" src="/assets/icons/maximize.svg" alt="">
+        </button>
+        <button id="closeBtn" class="icon-btn danger" data-i18n-title="window.close" title="Close">
+          <img class="window-icon" src="/assets/icons/close.svg" alt="">
+        </button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="card jobs-card">
+        <h1 data-i18n="pipeline.title">Pipeline</h1>
+        <p id="pipelineMode" class="muted" data-i18n="pipeline.loading">Pipeline mode: loading...</p>
+
+        <div class="step">
+          <h2 data-i18n="step.runtime">0. Runtime Settings</h2>
+          <details id="runtimeMainCollapse" class="enh-collapse">
+            <summary data-i18n="runtime.core_open">Core runtime settings</summary>
+            <div class="enh-body">
+              <div class="timeline-add">
+                <label><span data-i18n="runtime.exec_mode">Exec mode</span>
+                  <select id="execMode">
+                    <option value="local">local</option>
+                    <option value="manual">manual</option>
+                  </select>
+                </label>
+                <label><span data-i18n="runtime.timeout">Timeout sec</span>
+                  <input id="timeoutSec" type="number" min="10" max="86400" step="1" value="3600">
+                </label>
+                <label><span data-i18n="runtime.command">Command template</span>
+                  <input id="inferCommand" type="text" data-i18n-placeholder="runtime.command_ph" placeholder='python inference.py --face "{video}" --audio "{audio}" --outfile "{output}"'>
+                </label>
+                <label><span data-i18n="runtime.checkpoint">Checkpoint path</span>
+                  <input id="checkpointPath" type="text" data-i18n-placeholder="runtime.checkpoint_ph" placeholder='C:\path\to\wav2lip.pth'>
+                </label>
+                <label><span data-i18n="runtime.use_box">Use fixed box (--box)</span>
+                  <select id="useBox">
+                    <option value="0" data-i18n="runtime.use_box_no">No (auto detect each frame)</option>
+                    <option value="1" data-i18n="runtime.use_box_yes">Yes (fixed bbox from selected face)</option>
+                  </select>
+                </label>
+                <label><span data-i18n="runtime.det_batch">Face detector batch</span>
+                  <input id="faceDetBatch" type="number" min="1" max="512" step="1" value="16">
+                </label>
+                <label><span data-i18n="runtime.w2l_batch">Wav2Lip batch</span>
+                  <input id="wav2lipBatch" type="number" min="1" max="512" step="1" value="64">
+                </label>
+                <label><span data-i18n="runtime.pads">Pads (top bottom left right)</span>
+                  <input id="padsValue" type="text" placeholder="0 10 0 0">
+                </label>
+                <label><span data-i18n="runtime.resize">Resize factor</span>
+                  <input id="resizeFactor" type="number" min="1" max="8" step="1" value="1">
+                </label>
+                <label><span data-i18n="runtime.nosmooth">No smooth</span>
+                  <select id="noSmooth">
+                    <option value="0" data-i18n="runtime.nosmooth_no">No (smoother box trajectory)</option>
+                    <option value="1" data-i18n="runtime.nosmooth_yes">Yes (raw boxes, sharper but noisier)</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+          </details>
+          <details id="enhanceCollapse" class="enh-collapse">
+            <summary data-i18n="runtime.enhance_open">Enhancements</summary>
+            <div class="enh-body">
+              <label class="enh-opt">
+                <input id="enhanceSharpen" type="checkbox">
+                <span>
+                  <strong data-i18n="runtime.enhance_sharpen">Sharpen mouth region</strong>
+                  <small data-i18n="runtime.enhance_sharpen_desc">Improves mouth edge clarity; slightly increases render time.</small>
+                </span>
+              </label>
+              <label class="enh-opt">
+                <input id="enhanceDenoise" type="checkbox">
+                <span>
+                  <strong data-i18n="runtime.enhance_denoise">Temporal denoise</strong>
+                  <small data-i18n="runtime.enhance_denoise_desc">Reduces compression noise around lips and cheeks.</small>
+                </span>
+              </label>
+              <label class="enh-opt">
+                <input id="enhanceColorBoost" type="checkbox">
+                <span>
+                  <strong data-i18n="runtime.enhance_color">Color and contrast match</strong>
+                  <small data-i18n="runtime.enhance_color_desc">Makes mouth blend more naturally with source frame colors.</small>
+                </span>
+              </label>
+              <label class="enh-opt">
+                <input id="enhanceUltra" type="checkbox">
+                <span>
+                  <strong data-i18n="runtime.enhance_ultra">Ultra postprocess (slow)</strong>
+                  <small data-i18n="runtime.enhance_ultra_desc">Extra heavy detail/regrain pass for highest visual quality.</small>
+                </span>
+              </label>
+              <label class="enh-opt">
+                <input id="enhanceExtreme" type="checkbox">
+                <span>
+                  <strong data-i18n="runtime.enhance_extreme">Extreme encode pass (very slow)</strong>
+                  <small data-i18n="runtime.enhance_extreme_desc">Additional denoise/detail pass and ultra-slow encode for best final quality.</small>
+                </span>
+              </label>
+              <label class="enh-opt">
+                <input id="enhanceFaceRestore" type="checkbox">
+                <span>
+                  <strong data-i18n="runtime.enhance_face_restore">ROI face restore</strong>
+                  <small data-i18n="runtime.enhance_face_restore_desc">Restores and sharpens the target face region frame-by-frame.</small>
+                </span>
+              </label>
+              <label class="enh-opt">
+                <input id="enhanceTwoPass" type="checkbox">
+                <span>
+                  <strong data-i18n="runtime.enhance_two_pass">Two-pass postprocess</strong>
+                  <small data-i18n="runtime.enhance_two_pass_desc">Runs an additional refinement pass for cleaner final details.</small>
+                </span>
+              </label>
+              <label class="enh-opt">
+                <input id="enhanceQualityGate" type="checkbox">
+                <span>
+                  <strong data-i18n="runtime.enhance_quality_gate">Quality gate rerender</strong>
+                  <small data-i18n="runtime.enhance_quality_gate_desc">Checks output quality and automatically rerenders with stronger settings if needed.</small>
+                </span>
+              </label>
+              <label class="enh-opt">
+                <input id="enhanceTemporal" type="checkbox">
+                <span>
+                  <strong data-i18n="runtime.enhance_temporal">Temporal consistency pass</strong>
+                  <small data-i18n="runtime.enhance_temporal_desc">Adds extra temporal smoothing to reduce flicker across frames.</small>
+                </span>
+              </label>
+              <label class="enh-opt">
+                <input id="enhanceDeblock" type="checkbox">
+                <span>
+                  <strong data-i18n="runtime.enhance_deblock">Deblock artifact cleanup</strong>
+                  <small data-i18n="runtime.enhance_deblock_desc">Reduces compression blocks around mouth and jaw transitions.</small>
+                </span>
+              </label>
+              <label class="enh-opt">
+                <input id="enhanceMultiCandidate" type="checkbox">
+                <span>
+                  <strong data-i18n="runtime.enhance_multicandidate">Multi-candidate render</strong>
+                  <small data-i18n="runtime.enhance_multicandidate_desc">Builds multiple heavy variants and keeps the best result.</small>
+                </span>
+              </label>
+              <label class="enh-opt">
+                <input id="enhance10bit" type="checkbox">
+                <span>
+                  <strong data-i18n="runtime.enhance_10bit">10-bit intermediate pipeline</strong>
+                  <small data-i18n="runtime.enhance_10bit_desc">Uses 10-bit intermediate encoding before final export to preserve gradients.</small>
+                </span>
+              </label>
+              <label class="enh-opt">
+                <input id="enhanceAntiFlicker" type="checkbox">
+                <span>
+                  <strong data-i18n="runtime.enhance_anti_flicker">Anti-flicker blend pass</strong>
+                  <small data-i18n="runtime.enhance_anti_flicker_desc">Applies extra temporal blending to suppress residual flicker.</small>
+                </span>
+              </label>
+              <label class="enh-opt">
+                <input id="enhanceSceneCut" type="checkbox">
+                <span>
+                  <strong data-i18n="runtime.enhance_scene_cut">Scene-cut aware guard</strong>
+                  <small data-i18n="runtime.enhance_scene_cut_desc">Auto-disables anti-flicker blending on high-cut videos to avoid ghosting on edits.</small>
+                </span>
+              </label>
+            </div>
+          </details>
+          <div class="runtime-actions">
+            <label><span data-i18n="runtime.preset_label">Preset</span>
+              <select id="runtimePreset">
+                <option value="balanced" data-i18n="runtime.preset_balanced">Balanced quality</option>
+                <option value="fast" data-i18n="runtime.preset_fast">Fast preview</option>
+                <option value="hq" data-i18n="runtime.preset_hq">High quality stable</option>
+                <option value="max" data-i18n="runtime.preset_max">Maximum quality</option>
+                <option value="max_plus" data-i18n="runtime.preset_max_plus">Maximum+ quality</option>
+              </select>
+            </label>
+            <button id="applyPresetBtn" type="button" data-i18n="runtime.preset_apply">Apply preset</button>
+          </div>
+          <p id="presetInfo" class="muted compact" data-i18n="runtime.preset_balanced_desc">Balanced: stable quality and moderate speed.</p>
+          <p id="enhanceSummary" class="muted compact" data-i18n="runtime.enhance_summary_off">Enhancements: off</p>
+          <p class="muted compact" data-i18n="runtime.placeholders">Placeholders: {video} {audio} {output} {target_json} {track_json} {timeline_json} {project} {app}</p>
+          <p id="settingsInfo" class="muted compact" data-i18n="runtime.not_loaded">Settings are not loaded.</p>
+        </div>
+
+        <div class="step">
+          <h2 data-i18n="step.video">1. Video</h2>
+          <label><span data-i18n="video.upload_label">Upload source video</span>
+            <input id="videoUploadInput" type="file" accept="video/*">
+          </label>
+          <button id="uploadVideoBtn" type="button" data-i18n="video.upload_btn">Upload video</button>
+          <button id="resetSessionBtn" type="button" data-i18n="video.reset_btn">Reset session</button>
+          <p id="videoInfo" class="muted compact" data-i18n="video.not_selected">Video is not selected.</p>
+        </div>
+
+        <div class="step">
+          <h2 data-i18n="step.face">2. Face Selection</h2>
+          <div class="probe-row">
+            <label><span data-i18n="face.frame_pos">Frame position</span>
+              <input id="probeRatio" type="range" min="0" max="100" value="50">
+            </label>
+            <button id="probeBtn" type="button" data-i18n="face.probe_btn">Show frame and faces</button>
+          </div>
+          <div id="probeStage" class="probe-stage">
+            <img id="probeFrame" alt="frame probe">
+            <div id="probePlaceholder" class="probe-placeholder" data-i18n="face.placeholder_no_video">Upload video to preview frame</div>
+            <div id="probeBoxes" class="probe-boxes"></div>
+          </div>
+          <div id="probeFacesList" class="faces-list"></div>
+          <p id="selectedFaceInfo" class="muted compact" data-i18n="face.not_selected">Face is not selected.</p>
+        </div>
+
+        <div class="step">
+          <h2 data-i18n="step.track">3. Smart Tracking target-face</h2>
+          <div class="tracking-row">
+            <label><span data-i18n="track.step">Sample step (frames)</span>
+              <input id="trackStep" type="number" min="1" max="30" step="1" value="3">
+            </label>
+            <button id="buildTrackBtn" type="button" data-i18n="track.build_btn">Build tracking</button>
+          </div>
+          <p id="trackingInfo" class="muted compact" data-i18n="track.not_built">Tracking is not built.</p>
+        </div>
+
+        <div class="step">
+          <h2 data-i18n="step.timeline">4. Timeline (manual labeling)</h2>
+          <div class="timeline-add">
+            <label><span data-i18n="timeline.start">Start (sec)</span>
+              <input id="segStart" type="number" min="0" step="0.01" value="0">
+            </label>
+            <label><span data-i18n="timeline.end">End (sec)</span>
+              <input id="segEnd" type="number" min="0" step="0.01" value="3">
+            </label>
+            <label><span data-i18n="timeline.speaker">Speaker face_id</span>
+              <input id="segSpeaker" type="text" placeholder="f0">
+            </label>
+            <button id="addSegBtn" type="button" data-i18n="timeline.add_btn">Add segment</button>
+          </div>
+          <div id="timelineList" class="timeline-list"></div>
+          <button id="saveTimelineBtn" type="button" data-i18n="timeline.save_btn">Save timeline</button>
+        </div>
+
+        <div class="step">
+          <h2 data-i18n="step.audio">5. Audio and run</h2>
+          <label><span data-i18n="audio.upload_label">Upload audio</span>
+            <input id="audioInput" type="file" accept="audio/*">
+          </label>
+          <button id="submitBtn" type="button" class="primary" data-i18n="audio.submit_btn">Create job</button>
+          <p id="jobStatus" class="status"></p>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="jobs-head">
+          <h2 data-i18n="jobs.title">Jobs</h2>
+          <div class="jobs-head-right">
+            <button id="refreshBtn" type="button" data-i18n="jobs.refresh">Refresh</button>
+          </div>
+        </div>
+        <div id="jobsList" class="jobs-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/app.js?v=20260214_04"></script>
+</body>
+</html>
