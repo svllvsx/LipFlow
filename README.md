@@ -10,6 +10,8 @@ Portable desktop UI for Wav2Lip workflow (Windows).
   </a>
 </p>
 
+<p><strong>Note:</strong> This is a fully portable solution. For GPU mode, installed NVIDIA/CUDA drivers are required on the target system.</p>
+
 <p>
   <img src="https://img.shields.io/badge/Platform-Windows%20x64-0f172a?style=flat-square" alt="platform" />
   <img src="https://img.shields.io/badge/UI-CEF-0f172a?style=flat-square" alt="ui" />
