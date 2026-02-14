@@ -5,7 +5,7 @@
 Portable desktop UI for Wav2Lip workflow (Windows).
 
 <p>
-  <a href="https://drive.google.com/drive/folders/REPLACE_WITH_YOUR_LINK">
+  <a href="https://drive.google.com/file/d/1tIse4Zuz3rpBFmQyHYcN2DqSvX4c90U6/view?usp=sharing">
     <img src="https://img.shields.io/badge/Download%20Portable-Google%20Drive-1a73e8?style=for-the-badge&logo=googledrive&logoColor=white" alt="Download from Google Drive" />
   </a>
 </p>
