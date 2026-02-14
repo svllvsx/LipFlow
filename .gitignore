@@ -62,3 +62,6 @@ Wav2Lip/temp/
 
 # Safety: nested git metadata in vendored repo copy
 Wav2Lip/.git/
+
+# Local development journal
+DEVELOPMENT_PROGRESS.md
