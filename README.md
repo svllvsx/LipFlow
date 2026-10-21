@@ -1,3 +1,5 @@
+<p align="center"><a href="README.en.md">English</a> · <a href="README.ru.md">Русский</a> · <a href="README.md">Original README</a></p>
+
 <p align="center"><b>PUBLIC PROJECT · ПУБЛИЧНЫЙ ПРОЕКТ</b><br>
 <a href="https://github.com/svllvsxprod/LipFlow">Original repository / Оригинальный репозиторий ↗</a> · <a href="https://github.com/svllvsx">Portfolio / Портфолио</a></p>
 
